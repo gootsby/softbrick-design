@@ -2463,8 +2463,6 @@
     --sb-title-comparison: clamp(30px, 8vw, 34px);
     --sb-title-utility: clamp(28px, 7.5vw, 32px);
     padding-top: 30px;
-    padding-right: clamp(18px, 5.6vw, 22px);
-    padding-left: clamp(18px, 5.6vw, 22px);
   }
 
   #sb-detail-page .sb-top-rule {
