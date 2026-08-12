@@ -119,7 +119,6 @@
   overflow-wrap: break-word;
   isolation: isolate;
   line-height: normal;
-  padding: 46px var(--sb-page-gutter) 72px;
 }
 
 #sb-detail-page .sb-editorial-hero {
@@ -354,20 +353,30 @@
   font-weight: 700;
 }
 
-#sb-detail-page .sb-detail-index {
+#sb-detail-page .sb-detail-index-shell {
   position: sticky;
-  top: 0;
+  top: 42px;
   z-index: 20;
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
   width: min(100%, var(--sb-content-width));
   margin-top: 64px;
   margin-right: auto;
   margin-bottom: 0;
   margin-left: auto;
+  background: var(--sb-page);
+}
+
+#sb-detail-page .sb-detail-index {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  width: 100%;
+  margin: 0;
   border: 0;
   background: var(--sb-page);
   scroll-target-group: auto;
+}
+
+#sb-detail-page .sb-detail-index-cue {
+  display: none;
 }
 
 #sb-detail-page .sb-detail-index a {
@@ -388,11 +397,6 @@
 
 #sb-detail-page .sb-detail-index a:target-current {
   border-bottom: 2px solid var(--sb-ink);
-}
-
-#sb-detail-page .sb-detail-index a:hover {
-  background: var(--sb-image-ground);
-  outline: none;
 }
 
 #sb-detail-page .sb-detail-index a:focus-visible {
@@ -2519,12 +2523,54 @@
     grid-column: 1;
   }
 
-  #sb-detail-page .sb-detail-index {
+  #sb-detail-page .sb-detail-index-shell {
     margin-top: 48px;
+  }
+
+  #sb-detail-page .sb-detail-index-shell::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 24px;
+    bottom: 0;
+    width: 36px;
+    background: linear-gradient(to right, transparent, var(--sb-page));
+    pointer-events: none;
+  }
+
+  #sb-detail-page .sb-detail-index-cue {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 100%;
+    background: var(--sb-page);
+    color: var(--sb-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  @keyframes sb-detail-index-cue-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(2px); }
+  }
+
+  #sb-detail-page .sb-detail-index-cue-mark {
+    animation: sb-detail-index-cue-nudge 1.4s ease-in-out infinite;
+  }
+
+  #sb-detail-page .sb-detail-index {
     display: flex;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     scrollbar-width: none;
+    padding-right: 24px;
   }
 
   #sb-detail-page .sb-detail-index a {
@@ -2545,20 +2591,21 @@
 
   #sb-detail-page .sb-gallery-grid {
     margin-top: 40px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 38px 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 38px 0;
   }
 
+  #sb-detail-page .sb-gallery-figure,
   #sb-detail-page .sb-gallery-span-5 {
-    grid-column: 1 / -1;
+    grid-column: 1;
   }
 
   #sb-detail-page .sb-gallery-span-6 {
-    grid-column: 1 / -1;
+    grid-column: 1;
   }
 
   #sb-detail-page .sb-gallery-span-7 {
-    grid-column: 1 / -1;
+    grid-column: 1;
   }
 
   #sb-detail-page .sb-gallery-figure figcaption {
@@ -2871,54 +2918,6 @@
     display: none;
   }
 
-  #sb-detail-page .sb-gallery-figure:nth-child(1) {
-    grid-column: 1 / -1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(4) {
-    grid-column: 1 / -1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(7) {
-    grid-column: 1 / -1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(2) {
-    grid-column: span 1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(3) {
-    grid-column: span 1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(5) {
-    grid-column: span 1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(6) {
-    grid-column: span 1;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(2) .sb-gallery-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(3) .sb-gallery-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(5) .sb-gallery-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(6) .sb-gallery-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  #sb-detail-page .sb-gallery-figure:nth-child(8) {
-    grid-column: 2;
-  }
-
   #sb-detail-page .sb-point-card .sb-point-visual {
     aspect-ratio: 4 / 3;
   }
@@ -3153,5 +3152,9 @@
 @media (prefers-reduced-motion: reduce) {
   #sb-detail-page .sb-detail-index a {
     transition: none;
+  }
+
+  #sb-detail-page .sb-detail-index-cue-mark {
+    animation: none;
   }
 }
