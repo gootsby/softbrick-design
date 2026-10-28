@@ -4436,3 +4436,15 @@
 
 /* Imweb's editor adds a 5px margin to every pasted image (.fr-dii); page images sit flush in their frames. */
 #sb-detail-page img { margin: 0; }
+
+/* Space between the detail body and Imweb's own blocks above and below it. */
+#sb-detail-page.sb-detail-page {
+  padding-top: var(--sb-space-80);
+  padding-bottom: var(--sb-space-80);
+}
+@media (max-width: 767px) {
+  #sb-detail-page.sb-detail-page {
+    padding-top: var(--sb-space-48);
+    padding-bottom: var(--sb-space-48);
+  }
+}
