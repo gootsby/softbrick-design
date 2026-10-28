@@ -4426,5 +4426,9 @@
 #sb-detail-page .sb-visual-frame .sb-hero-still { display: none; }
 @media (prefers-reduced-motion: reduce) {
   #sb-detail-page .sb-visual-frame .sb-hero-video { display: none; }
-  #sb-detail-page .sb-visual-frame .sb-hero-still { display: block; }
+  #sb-detail-page .sb-visual-frame .sb-hero-still-pc { display: block; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 767px) {
+  #sb-detail-page .sb-visual-frame .sb-hero-still-pc { display: none; }
+  #sb-detail-page .sb-visual-frame .sb-hero-still-mobile { display: block; }
 }
