@@ -4432,3 +4432,6 @@
   #sb-detail-page .sb-visual-frame .sb-hero-still-pc { display: none; }
   #sb-detail-page .sb-visual-frame .sb-hero-still-mobile { display: block; }
 }
+
+/* Imweb's editor adds a 5px margin to every pasted image (.fr-dii); page images sit flush in their frames. */
+#sb-detail-page img { margin: 0; }
