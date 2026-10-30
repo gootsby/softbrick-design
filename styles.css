@@ -4434,6 +4434,13 @@
 #sb-detail-page .sb-visual-frame .sb-hero-video {
   object-fit: cover;
 }
+/* One video per breakpoint, each with its file in src. Imweb clones the body from a <template>, and
+   WebKit never selects a <source> child on a cloned video, so <source media> left iOS with no video. */
+#sb-detail-page .sb-visual-frame .sb-hero-video-mobile { display: none; }
+@media (max-width: 767px) {
+  #sb-detail-page .sb-visual-frame .sb-hero-video-pc { display: none; }
+  #sb-detail-page .sb-visual-frame .sb-hero-video-mobile { display: block; }
+}
 #sb-detail-page .sb-visual-frame .sb-hero-still { display: none; }
 @media (prefers-reduced-motion: reduce) {
   #sb-detail-page .sb-visual-frame .sb-hero-video { display: none; }
