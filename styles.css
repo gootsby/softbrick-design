@@ -395,7 +395,6 @@
   margin: 0;
   border: 0;
   background: var(--sb-page);
-  scroll-target-group: auto;
 }
 
 #sb-detail-page .sb-detail-index-cue {
@@ -409,14 +408,58 @@
   min-width: 0;
   min-height: 52px;
   border: 0;
+  border-bottom: 2px solid transparent;
   color: var(--sb-ink);
   text-align: center;
   text-decoration: none;
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-#sb-detail-page .sb-detail-index a:target-current {
-  border-bottom: 2px solid var(--sb-ink);
+/* Current-section underline. Each linked section exposes a view timeline, inset to a 1px line just under
+   the sticky index, and its link is underlined while the section crosses that line. Scroll-driven
+   animations work in Chromium and Safari 26+; :target-current (scroll markers) was Chromium-only. */
+#sb-detail-page.sb-detail-page {
+  timeline-scope: --sb-index-gallery, --sb-index-materials, --sb-index-fabric, --sb-index-configurations,
+    --sb-index-size, --sb-index-care, --sb-index-delivery, --sb-index-notice;
+}
+
+#sb-detail-page #sb-gallery-section { view-timeline-name: --sb-index-gallery; }
+#sb-detail-page #sb-materials-section { view-timeline-name: --sb-index-materials; }
+#sb-detail-page #sb-fabric-section { view-timeline-name: --sb-index-fabric; }
+#sb-detail-page #sb-configurations-section { view-timeline-name: --sb-index-configurations; }
+#sb-detail-page #sb-size-section { view-timeline-name: --sb-index-size; }
+#sb-detail-page #sb-care-section { view-timeline-name: --sb-index-care; }
+#sb-detail-page .sb-delivery-section { view-timeline-name: --sb-index-delivery; }
+#sb-detail-page #sb-notice-section { view-timeline-name: --sb-index-notice; }
+
+#sb-detail-page :is(#sb-gallery-section, #sb-materials-section, #sb-fabric-section, #sb-configurations-section,
+  #sb-size-section, #sb-care-section, .sb-delivery-section, #sb-notice-section) {
+  view-timeline-axis: block;
+  view-timeline-inset: 140px calc(100% - 141px);
+}
+
+@keyframes sb-index-current {
+  from, to { border-bottom-color: var(--sb-ink); }
+}
+
+#sb-detail-page .sb-detail-index a {
+  animation-name: sb-index-current;
+  animation-duration: 1ms;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
+  animation-range: cover 0% cover 100%;
+}
+
+#sb-detail-page .sb-detail-index a[href="#sb-gallery-section"] { animation-timeline: --sb-index-gallery; }
+#sb-detail-page .sb-detail-index a[href="#sb-materials-section"] { animation-timeline: --sb-index-materials; }
+#sb-detail-page .sb-detail-index a[href="#sb-fabric-section"] { animation-timeline: --sb-index-fabric; }
+#sb-detail-page .sb-detail-index a[href="#sb-configurations-section"] { animation-timeline: --sb-index-configurations; }
+#sb-detail-page .sb-detail-index a[href="#sb-size-section"] { animation-timeline: --sb-index-size; }
+#sb-detail-page .sb-detail-index a[href="#sb-notice-section"] { animation-timeline: --sb-index-notice; }
+/* 관리·배송 covers both the care and delivery sections. */
+#sb-detail-page .sb-detail-index a[href="#sb-care-section"] {
+  animation-name: sb-index-current, sb-index-current;
+  animation-timeline: --sb-index-care, --sb-index-delivery;
 }
 
 #sb-detail-page .sb-detail-index a:focus-visible {
@@ -833,8 +876,12 @@
   margin-top: var(--sb-space-16);
 }
 
+/* Fixed so the hidden radios are always on screen: tapping a tab label focuses its radio, and Android
+   Chrome scrolled the page up to an off-screen radio, away from the sticky tabs. */
 #sb-detail-page .sb-fabric-tab-input {
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 0;
   width: 1px;
   height: 1px;
   margin: -1px;
@@ -847,16 +894,26 @@
 }
 
 #sb-detail-page .sb-fabric-collections {
+  position: relative;
   margin-top: 0;
 }
 
+/* The inactive panel is collapsed rather than display: none, so its swatch backgrounds still download
+   and appear at once when its tab is picked. visibility: hidden keeps it out of focus and the a11y tree. */
 #sb-detail-page .sb-fabric-collections>.sb-fabric-collection {
-  display: none;
+  position: absolute;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 #sb-detail-page #sb-fabric-tab-fusion:checked~.sb-fabric-collections #sb-fusion-panel,
 #sb-detail-page #sb-fabric-tab-randers:checked~.sb-fabric-collections #sb-randers-panel {
-  display: block;
+  position: static;
+  height: auto;
+  overflow: visible;
+  visibility: visible;
 }
 
 #sb-detail-page .sb-fabric-collection {
