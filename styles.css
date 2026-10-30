@@ -2362,8 +2362,6 @@
     --sb-font-body-mobile: var(--sb-type-body);
     --sb-font-label: var(--sb-type-label);
     padding-top: var(--sb-space-32);
-    padding-right: var(--sb-space-24);
-    padding-left: var(--sb-space-24);
   }
 
 #sb-detail-page .sb-hero-copy {
@@ -2428,13 +2426,21 @@
     z-index: 2;
     top: 0;
     right: 0;
-    display: grid;
-    place-items: center;
+    /* Imweb's editor wraps the mark in &nbsp; text; flex keeps it on one centred line and font-size: 0 hides the spaces. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 24px;
     height: 100%;
     background: var(--sb-page);
     color: var(--sb-muted);
+    font-size: 0;
     pointer-events: none;
+  }
+
+  #sb-detail-page .sb-detail-index-cue-mark {
+    font-size: 15px;
+    line-height: 1;
   }
 
   @keyframes sb-detail-index-cue-nudge {
@@ -3382,11 +3388,6 @@
 }
 
 @media (max-width: 767px) {
-  #sb-detail-page.sb-detail-page {
-    padding-right: var(--sb-space-24);
-    padding-left: var(--sb-space-24);
-  }
-
   #sb-detail-page .sb-section-heading {
     gap: var(--sb-space-24);
     margin-top: var(--sb-space-64);
@@ -3471,13 +3472,6 @@
   #sb-detail-page .sb-warranty-grid div {
     padding-top: var(--sb-space-16);
     padding-bottom: var(--sb-space-16);
-  }
-}
-
-@media (max-width: 360px) {
-  #sb-detail-page.sb-detail-page {
-    padding-right: var(--sb-space-16);
-    padding-left: var(--sb-space-16);
   }
 }
 
@@ -4040,9 +4034,6 @@
 }
 
 @media (min-width: 768px) {
-  #sb-detail-page.sb-detail-page {
-    padding-inline: var(--sb-page-gutter);
-  }
   #sb-detail-page .sb-configurations-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--sb-grid-row-gap) var(--sb-grid-gap);
