@@ -2558,7 +2558,14 @@
     margin-top: 0;
   }
 
+  /* Sticks under the detail index (42px Imweb tab bar + 48px index) until the fabric section ends.
+     The panel's top rule scrolls away, so the tabs carry their own. */
   #sb-detail-page .sb-fabric-tabs {
+    position: sticky;
+    top: 90px;
+    z-index: 19;
+    background: var(--sb-page);
+    box-shadow: 0 1px 0 var(--sb-ink);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4408,11 +4415,23 @@
   }
 }
 
-/* Hero video; the still frame replaces it when the viewer prefers reduced motion. */
+/* Hero video; the still frame replaces it when the viewer prefers reduced motion.
+   Imweb's editor wraps the video in span.fr-video, and WebKit (Safari, iOS Chrome) won't resolve
+   height: 100% through it, so the poster sat at its own 4:3 height. Pin both to the frame instead. */
+#sb-detail-page .sb-editorial-hero .sb-visual-frame {
+  position: relative;
+}
+#sb-detail-page .sb-visual-frame .fr-video,
 #sb-detail-page .sb-visual-frame .sb-hero-video {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#sb-detail-page .sb-visual-frame .sb-hero-video {
   object-fit: cover;
 }
 #sb-detail-page .sb-visual-frame .sb-hero-still { display: none; }
