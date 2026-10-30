@@ -4434,8 +4434,9 @@
 #sb-detail-page .sb-visual-frame .sb-hero-video {
   object-fit: cover;
 }
-/* One video per breakpoint, each with its file in src. Imweb clones the body from a <template>, and
-   WebKit never selects a <source> child on a cloned video, so <source media> left iOS with no video. */
+/* Imweb clones the body from a <template> and appends it a moment later. After that, WebKit only loads a
+   video's src attribute and Chromium only loads a <source> child. Each breakpoint therefore stacks a src
+   video (with the poster) under a poster-less <source> video: whichever one loads plays, the other stays empty. */
 #sb-detail-page .sb-visual-frame .sb-hero-video-mobile { display: none; }
 @media (max-width: 767px) {
   #sb-detail-page .sb-visual-frame .sb-hero-video-pc { display: none; }
