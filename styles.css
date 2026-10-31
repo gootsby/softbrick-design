@@ -775,6 +775,10 @@
   color: var(--sb-muted);
 }
 
+#sb-detail-page .sb-configuration-matrix-note+.sb-configuration-matrix-note {
+  margin-top: 4px;
+}
+
 #sb-detail-page .sb-material-card {
   display: grid;
   align-content: start;
@@ -833,10 +837,10 @@
   text-transform: uppercase;
 }
 
-/* The caption sits beside the title (under it on mobile), so it reads as a note on the scale, not a sixth label under the gauge. */
+/* The caption shares the title row, so the gauge below carries only the bubble, the bar and the labels. */
 #sb-detail-page .sb-comfort-scale {
-  grid-template-columns: auto minmax(0, 1fr);
-  row-gap: var(--sb-space-32);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--sb-space-32);
 }
 
 #sb-detail-page .sb-comfort-scale .sb-comfort-scale-copy {
@@ -851,27 +855,53 @@
   text-align: right;
 }
 
-#sb-detail-page .sb-comfort-scale .sb-comfort-steps {
+#sb-detail-page .sb-comfort-gauge {
+  --sb-comfort-level: 60%;
   grid-column: 1 / -1;
   grid-row: 2;
+  margin-top: var(--sb-space-48);
+}
+
+/* The bubble is shifted left by the same share of its own width as the marker's share of the bar, so its tail always lands on the marker and the bubble never leaves the bar, however narrow the screen. */
+#sb-detail-page .sb-comfort-gauge .sb-comfort-summary {
+  position: relative;
+  left: var(--sb-comfort-level);
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 14px;
+  padding: 10px 16px;
+  background: var(--sb-ink);
+  color: var(--sb-page);
+  transform: translateX(calc(var(--sb-comfort-level) * -1));
+}
+
+#sb-detail-page .sb-comfort-gauge .sb-comfort-summary::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: var(--sb-comfort-level);
+  margin-left: -7px;
+  border-top: 7px solid var(--sb-ink);
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
 }
 
 @media (max-width: 767px) {
-  #sb-detail-page .sb-comfort-scale {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 0;
-  }
-
   #sb-detail-page .sb-comfort-scale .sb-comfort-caption {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 2;
     margin-top: var(--sb-space-8);
     text-align: left;
   }
 
-  #sb-detail-page .sb-comfort-scale .sb-comfort-steps {
+  #sb-detail-page .sb-comfort-gauge {
     grid-row: 3;
-    margin-top: var(--sb-space-24);
+    margin-top: var(--sb-space-32);
+  }
+
+  #sb-detail-page .sb-comfort-gauge .sb-comfort-summary {
+    padding: 10px 14px;
   }
 }
 
@@ -1752,7 +1782,6 @@
 
 /* A gauge, not five blocks: RAY sits between 균형 and 탄탄함. Labels centre in five equal columns, so 균형 is at 50% and 탄탄함 at 70%. */
 #sb-detail-page .sb-comfort-steps {
-  --sb-comfort-level: 60%;
   position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2634,7 +2663,6 @@
 
   #sb-detail-page .sb-comfort-scale {
     margin-top: var(--sb-space-32);
-    gap: var(--sb-space-16);
   }
 
   #sb-detail-page .sb-material-card {
@@ -3133,6 +3161,7 @@
 #sb-detail-page .sb-configuration-link>span,
 #sb-detail-page .sb-configuration-link>strong,
 #sb-detail-page .sb-comfort-scale-copy strong,
+#sb-detail-page .sb-comfort-gauge .sb-comfort-summary,
 #sb-detail-page .sb-material-card p,
 #sb-detail-page .sb-material-group-heading p,
 #sb-detail-page .sb-fabric-collection-copy>p.sb-copy,
