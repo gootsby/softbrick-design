@@ -833,6 +833,48 @@
   text-transform: uppercase;
 }
 
+/* The caption sits beside the title (under it on mobile), so it reads as a note on the scale, not a sixth label under the gauge. */
+#sb-detail-page .sb-comfort-scale {
+  grid-template-columns: auto minmax(0, 1fr);
+  row-gap: var(--sb-space-32);
+}
+
+#sb-detail-page .sb-comfort-scale .sb-comfort-scale-copy {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+#sb-detail-page .sb-comfort-scale .sb-comfort-caption {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: baseline;
+  text-align: right;
+}
+
+#sb-detail-page .sb-comfort-scale .sb-comfort-steps {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+@media (max-width: 767px) {
+  #sb-detail-page .sb-comfort-scale {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+  }
+
+  #sb-detail-page .sb-comfort-scale .sb-comfort-caption {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: var(--sb-space-8);
+    text-align: left;
+  }
+
+  #sb-detail-page .sb-comfort-scale .sb-comfort-steps {
+    grid-row: 3;
+    margin-top: var(--sb-space-24);
+  }
+}
+
 #sb-detail-page .sb-material-cashmilon {
   background: #f1f1f1;
 }
@@ -1708,46 +1750,52 @@
   outline-offset: -4px;
 }
 
+/* A gauge, not five blocks: RAY sits between 균형 and 탄탄함. Labels centre in five equal columns, so 균형 is at 50% and 탄탄함 at 70%. */
 #sb-detail-page .sb-comfort-steps {
+  --sb-comfort-level: 60%;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--sb-space-8);
+  gap: 0;
   margin-top: 0;
   margin-right: 0;
   margin-bottom: 0;
   margin-left: 0;
-  padding-top: 0;
+  padding-top: 32px;
   padding-right: 0;
   padding-bottom: 0;
   padding-left: 0;
   list-style: none;
 }
 
-#sb-detail-page .sb-comfort-steps li {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--sb-space-8);
-  align-items: center;
-  min-width: 0;
-  border-top: 7px solid #dddddd;
-  padding-top: var(--sb-space-12);
-  color: var(--sb-muted);
-}
-
-#sb-detail-page .sb-comfort-steps li::before {
+#sb-detail-page .sb-comfort-steps::before {
   content: "";
   position: absolute;
-  top: -12px;
-  left: 50%;
-  width: 1px;
-  height: 11px;
-  background: transparent;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--sb-ink) 0 var(--sb-comfort-level), #dddddd var(--sb-comfort-level) 100%);
 }
 
-#sb-detail-page .sb-comfort-steps [aria-current="true"] {
-  border-top-color: var(--sb-ink);
-  color: var(--sb-ink);
+#sb-detail-page .sb-comfort-steps::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: var(--sb-comfort-level);
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  margin-left: -8px;
+  border: 4px solid var(--sb-ink);
+  border-radius: 50%;
+  background: var(--sb-page);
+}
+
+#sb-detail-page .sb-comfort-steps li {
+  min-width: 0;
+  color: var(--sb-muted);
+  text-align: center;
 }
 
 #sb-detail-page .sb-cutaway {
@@ -2871,41 +2919,6 @@
     text-align: right;
   }
 
-  #sb-detail-page .sb-comfort-steps {
-    gap: var(--sb-space-8);
-  }
-
-  #sb-detail-page .sb-comfort-steps li {
-    display: block;
-    min-height: 7px;
-    border-top-width: 5px;
-    padding-top: 0;
-  }
-
-  #sb-detail-page .sb-comfort-steps li>.sb-node {
-    position: static;
-    display: inline;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-    clip-path: none;
-  }
-
-  #sb-detail-page .sb-comfort-steps li {
-    text-align: center;
-  }
-
-  #sb-detail-page .sb-comfort-steps li>span {
-    margin-right: 4px;
-  }
-
-  #sb-detail-page .sb-comfort-steps li:not([aria-current="true"])>span,
-  #sb-detail-page .sb-comfort-steps li:not([aria-current="true"])>small {
-    visibility: hidden;
-  }
-
   #sb-detail-page .sb-material-groups {
     gap: var(--sb-space-64);
     margin-top: var(--sb-space-48);
@@ -3191,7 +3204,6 @@
 #sb-detail-page .sb-configuration-meta dt,
 #sb-detail-page .sb-configuration-matrix-heading span,
 #sb-detail-page .sb-comfort-scale-copy span,
-#sb-detail-page .sb-comfort-steps span,
 #sb-detail-page .sb-material-group-heading>span,
 #sb-detail-page .sb-fabric-label,
 #sb-detail-page .sb-fabric-tab,
