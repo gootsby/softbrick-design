@@ -390,15 +390,11 @@
 
 #sb-detail-page .sb-detail-index {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   width: 100%;
   margin: 0;
   border: 0;
   background: var(--sb-page);
-}
-
-#sb-detail-page .sb-detail-index-cue {
-  display: none;
 }
 
 #sb-detail-page .sb-detail-index a {
@@ -419,24 +415,31 @@
    the sticky index, and its link is underlined while the section crosses that line. Scroll-driven
    animations work in Chromium and Safari 26+; :target-current (scroll markers) was Chromium-only. */
 #sb-detail-page.sb-detail-page {
-  timeline-scope: --sb-index-gallery, --sb-index-materials, --sb-index-fabric, --sb-index-configurations,
-    --sb-index-size, --sb-index-care, --sb-index-delivery, --sb-index-notice;
+  timeline-scope: --sb-index-gallery, --sb-index-configurations, --sb-index-size, --sb-index-materials,
+    --sb-index-fabric, --sb-index-care, --sb-index-notice, --sb-index-delivery, --sb-index-returns, --sb-index-service;
 }
 
 #sb-detail-page #sb-gallery-section { view-timeline-name: --sb-index-gallery; }
-#sb-detail-page #sb-materials-section { view-timeline-name: --sb-index-materials; }
-#sb-detail-page #sb-fabric-section { view-timeline-name: --sb-index-fabric; }
 #sb-detail-page #sb-configurations-section { view-timeline-name: --sb-index-configurations; }
 #sb-detail-page #sb-size-section { view-timeline-name: --sb-index-size; }
+#sb-detail-page #sb-materials-section { view-timeline-name: --sb-index-materials; }
+#sb-detail-page #sb-fabric-section { view-timeline-name: --sb-index-fabric; }
 #sb-detail-page #sb-care-section { view-timeline-name: --sb-index-care; }
-#sb-detail-page .sb-delivery-section { view-timeline-name: --sb-index-delivery; }
 #sb-detail-page #sb-notice-section { view-timeline-name: --sb-index-notice; }
+#sb-detail-page .sb-delivery-section { view-timeline-name: --sb-index-delivery; }
+#sb-detail-page #sb-returns-section { view-timeline-name: --sb-index-returns; }
+#sb-detail-page #sb-service-section { view-timeline-name: --sb-index-service; }
 
-#sb-detail-page :is(#sb-gallery-section, #sb-materials-section, #sb-fabric-section, #sb-configurations-section,
-  #sb-size-section, #sb-care-section, .sb-delivery-section, #sb-notice-section) {
+#sb-detail-page :is(#sb-gallery-section, #sb-configurations-section, #sb-size-section, #sb-materials-section,
+  #sb-fabric-section, #sb-care-section, #sb-notice-section, .sb-delivery-section, #sb-returns-section,
+  #sb-service-section) {
   view-timeline-axis: block;
   view-timeline-inset: 140px calc(100% - 141px);
 }
+
+/* The last section may never reach the line when little follows it, so it counts from entering the view.
+   By then only delivery or returns can be under the line, and they share its link. */
+#sb-detail-page #sb-service-section { view-timeline-inset: 140px 0; }
 
 @keyframes sb-index-current {
   from, to { border-bottom-color: var(--sb-ink); }
@@ -453,13 +456,18 @@
 #sb-detail-page .sb-detail-index a[href="#sb-gallery-section"] { animation-timeline: --sb-index-gallery; }
 #sb-detail-page .sb-detail-index a[href="#sb-materials-section"] { animation-timeline: --sb-index-materials; }
 #sb-detail-page .sb-detail-index a[href="#sb-fabric-section"] { animation-timeline: --sb-index-fabric; }
-#sb-detail-page .sb-detail-index a[href="#sb-configurations-section"] { animation-timeline: --sb-index-configurations; }
-#sb-detail-page .sb-detail-index a[href="#sb-size-section"] { animation-timeline: --sb-index-size; }
-#sb-detail-page .sb-detail-index a[href="#sb-notice-section"] { animation-timeline: --sb-index-notice; }
-/* 관리·배송 covers both the care and delivery sections. */
+/* 구성·크기 and 사용·관리 each cover two adjacent sections, 배송·반품 three. */
+#sb-detail-page .sb-detail-index a[href="#sb-configurations-section"] {
+  animation-name: sb-index-current, sb-index-current;
+  animation-timeline: --sb-index-configurations, --sb-index-size;
+}
 #sb-detail-page .sb-detail-index a[href="#sb-care-section"] {
   animation-name: sb-index-current, sb-index-current;
-  animation-timeline: --sb-index-care, --sb-index-delivery;
+  animation-timeline: --sb-index-care, --sb-index-notice;
+}
+#sb-detail-page .sb-detail-index a[href="#sb-delivery-section"] {
+  animation-name: sb-index-current, sb-index-current, sb-index-current;
+  animation-timeline: --sb-index-delivery, --sb-index-returns, --sb-index-service;
 }
 
 #sb-detail-page .sb-detail-index a:focus-visible {
@@ -2543,71 +2551,19 @@
     margin-top: var(--sb-space-48);
   }
 
-  #sb-detail-page .sb-detail-index-shell::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    right: 24px;
-    bottom: 0;
-    width: 36px;
-    background: linear-gradient(to right, transparent, var(--sb-page));
-    pointer-events: none;
-  }
-
-  #sb-detail-page .sb-detail-index-cue {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    right: 0;
-    /* Imweb's editor wraps the mark in &nbsp; text; flex keeps it on one centred line and font-size: 0 hides the spaces. */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 100%;
-    background: var(--sb-page);
-    color: var(--sb-muted);
-    font-size: 0;
-    pointer-events: none;
-  }
-
-  #sb-detail-page .sb-detail-index-cue-mark {
-    font-size: 15px;
-    line-height: 1;
-  }
-
-  @keyframes sb-detail-index-cue-nudge {
-
-    0%,
-    100% {
-      transform: translateX(0);
-    }
-
-    50% {
-      transform: translateX(2px);
-    }
-  }
-
-  #sb-detail-page .sb-detail-index-cue-mark {
-    animation: sb-detail-index-cue-nudge 1.4s ease-in-out infinite;
-  }
-
+  /* Six short links share one row down to 320px, so the index never scrolls sideways and needs no scroll cue.
+     Each link grows by the same amount, which keeps the gaps between labels even. */
   #sb-detail-page .sb-detail-index {
     display: flex;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scrollbar-width: none;
-    padding-right: var(--sb-space-24);
   }
 
   #sb-detail-page .sb-detail-index a {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 48px;
     padding-top: 0;
-    padding-right: var(--sb-space-16);
+    padding-right: 4px;
     padding-bottom: 0;
-    padding-left: var(--sb-space-16);
+    padding-left: 4px;
     white-space: nowrap;
   }
 
@@ -2908,9 +2864,6 @@
     margin-top: var(--sb-space-12);
   }
 
-#sb-detail-page .sb-detail-index::-webkit-scrollbar {
-    display: none;
-  }
 
   #sb-detail-page .sb-point-card .sb-point-visual {
     aspect-ratio: 4 / 3;
@@ -3089,10 +3042,6 @@
 @media (prefers-reduced-motion: reduce) {
   #sb-detail-page .sb-detail-index a {
     transition: none;
-  }
-
-  #sb-detail-page .sb-detail-index-cue-mark {
-    animation: none;
   }
 }
 
@@ -4482,18 +4431,21 @@
   aspect-ratio: 1 / 1;
 }
 
-/* Mobile notice cards stack like the care guide: 16:9 image above the copy. */
+/* Mobile notice cards take the material cards' form: a 3:4 photo left, copy right. The tall crop keeps the copy within the photo's height. */
 @media (max-width: 767px) {
+  #sb-detail-page .sb-notice-list { gap: 0; }
   #sb-detail-page .sb-notice-item {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(116px, 42%) minmax(0, 1fr);
     gap: var(--sb-space-16);
-    padding: var(--sb-space-16) 0;
+    padding: var(--sb-space-24) 0;
   }
   #sb-detail-page .sb-notice-item-visual {
     margin-top: 0;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 4;
   }
   #sb-detail-page .sb-notice-item-copy { padding-top: 0; }
+  #sb-detail-page .sb-notice-item .sb-point-number { margin-bottom: var(--sb-space-8); }
+  #sb-detail-page .sb-notice-item p { margin-top: var(--sb-space-8); }
 }
 
 /* Fabric collections without a hero image: name and copy left, specs right on the heading keyline. */
@@ -4562,5 +4514,243 @@
   #sb-detail-page.sb-detail-page {
     padding-top: var(--sb-space-48);
     padding-bottom: var(--sb-space-48);
+  }
+}
+
+/* The add-on note borrows the size notes' ruled label-and-copy form, laid on the line-up's three columns: label under the first list, copy across the other two. */
+#sb-detail-page .sb-configuration-addon-note {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sb-space-12) var(--sb-grid-gap);
+  margin-top: var(--sb-space-48);
+}
+#sb-detail-page .sb-configuration-addon-note > p {
+  grid-column: 2 / -1;
+}
+@media (max-width: 767px) {
+  #sb-detail-page .sb-configuration-addon-note {
+    grid-template-columns: 1fr;
+    margin-top: var(--sb-space-32);
+  }
+  #sb-detail-page .sb-configuration-addon-note > p {
+    grid-column: 1;
+  }
+}
+
+/* A four-step summary above the delivery rows. It sits on the surface panel used for the service box, so it reads as an overview, not a fifth row. */
+#sb-detail-page .sb-delivery-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sb-grid-gap);
+  margin: 0 0 var(--sb-space-64);
+  padding: var(--sb-space-32);
+  background: var(--sb-surface);
+  list-style: none;
+}
+#sb-detail-page .sb-delivery-flow > li {
+  display: grid;
+  align-content: start;
+  gap: var(--sb-space-12);
+  min-width: 0;
+  border-left: 1px solid var(--sb-line);
+  padding-left: var(--sb-space-16);
+}
+#sb-detail-page .sb-delivery-flow > li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+#sb-detail-page .sb-delivery-flow span {
+  font-size: var(--sb-type-label);
+  line-height: 1.4;
+  color: var(--sb-muted);
+}
+#sb-detail-page .sb-delivery-flow strong {
+  font-size: var(--sb-type-body);
+  line-height: var(--sb-leading-data);
+  font-weight: 700;
+  color: var(--sb-ink);
+  word-break: keep-all;
+}
+@media (max-width: 767px) {
+  #sb-detail-page .sb-delivery-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-space-24) var(--sb-space-16);
+    margin-bottom: var(--sb-space-48);
+    padding: var(--sb-space-24) var(--sb-space-16);
+  }
+  #sb-detail-page .sb-delivery-flow > li:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* Exchange stages and warranty cases fold into details rows. The summary keeps the stage and its outcome readable while closed. */
+#sb-detail-page .sb-fold-list {
+  margin-top: var(--sb-space-48);
+  border-top: 1px solid var(--sb-ink);
+}
+#sb-detail-page .sb-fold { border-bottom: 1px solid var(--sb-line); }
+#sb-detail-page .sb-fold-summary {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) auto 16px;
+  align-items: center;
+  gap: var(--sb-space-8) var(--sb-grid-gap);
+  padding: var(--sb-space-24) 0;
+  list-style: none;
+  cursor: pointer;
+}
+#sb-detail-page .sb-fold-summary::-webkit-details-marker { display: none; }
+#sb-detail-page .sb-fold-summary:focus-visible { outline: 2px solid var(--sb-ink); outline-offset: 4px; }
+/* Plus that turns into a minus when the row is open. */
+#sb-detail-page .sb-fold-summary::after {
+  content: "";
+  grid-column: 4;
+  width: 16px;
+  height: 16px;
+  background:
+    linear-gradient(var(--sb-ink), var(--sb-ink)) center / 16px 1.5px no-repeat,
+    linear-gradient(var(--sb-ink), var(--sb-ink)) center / 1.5px 16px no-repeat;
+}
+#sb-detail-page .sb-fold[open] > .sb-fold-summary::after { background-size: 16px 1.5px, 0 0; }
+#sb-detail-page .sb-fold-meta {
+  grid-column: 1;
+  font-size: var(--sb-type-label);
+  line-height: 1.4;
+  color: var(--sb-muted);
+}
+#sb-detail-page .sb-fold-title {
+  grid-column: 2;
+  font-size: var(--sb-type-body);
+  line-height: var(--sb-leading-data);
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+#sb-detail-page .sb-fold-result {
+  grid-column: 3;
+  font-size: var(--sb-type-body);
+  line-height: var(--sb-leading-data);
+  color: var(--sb-text);
+}
+#sb-detail-page .sb-fold-body {
+  display: grid;
+  gap: var(--sb-space-16);
+  max-width: 720px;
+  padding: 0 0 var(--sb-space-32) calc(200px + var(--sb-grid-gap));
+}
+#sb-detail-page .sb-fold-body p { margin: 0; color: var(--sb-text); }
+#sb-detail-page .sb-fold-body .sb-service-support-copy { display: grid; gap: var(--sb-space-16); margin: 0; padding: 0; }
+#sb-detail-page .sb-fold-body .sb-fabric-specs { margin-top: var(--sb-space-8); }
+
+@media (max-width: 767px) {
+  #sb-detail-page .sb-fold-list { margin-top: var(--sb-space-32); }
+  #sb-detail-page .sb-fold-summary {
+    grid-template-columns: minmax(0, 1fr) 16px;
+    gap: var(--sb-space-8) var(--sb-space-16);
+    padding: var(--sb-space-16) 0;
+  }
+  #sb-detail-page .sb-fold-summary::after { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+  #sb-detail-page .sb-fold-meta,
+  #sb-detail-page .sb-fold-title,
+  #sb-detail-page .sb-fold-result { grid-column: 1; }
+  #sb-detail-page .sb-fold-result { color: var(--sb-muted); }
+  #sb-detail-page .sb-fold-body { padding: 0 0 var(--sb-space-24); }
+}
+
+/* Configurations: a type guide, then every size as a render tile in three groups. The renders share one scale, so tile size reads as sofa size. */
+#sb-detail-page .sb-config-types {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sb-grid-gap);
+  margin: var(--sb-space-48) 0 0;
+  padding: 0;
+  list-style: none;
+}
+#sb-detail-page .sb-config-types > li {
+  display: grid;
+  align-content: start;
+  gap: var(--sb-space-8);
+  border-top: 1px solid var(--sb-ink);
+  padding-top: var(--sb-space-16);
+}
+#sb-detail-page .sb-config-types strong { font-size: var(--sb-type-body); line-height: var(--sb-leading-data); color: var(--sb-ink); }
+#sb-detail-page .sb-config-types span { font-size: var(--sb-type-label); line-height: 1.5; color: var(--sb-muted); }
+#sb-detail-page .sb-config-unit {
+  margin: var(--sb-space-64) 0 0;
+  font-size: var(--sb-type-caption);
+  color: var(--sb-muted);
+  text-align: right;
+}
+#sb-detail-page .sb-config-groups { display: grid; gap: var(--sb-space-48); margin-top: var(--sb-space-12); }
+#sb-detail-page .sb-config-group h3 {
+  margin: 0 0 var(--sb-space-16);
+  border-top: 1px solid var(--sb-line);
+  padding-top: var(--sb-space-16);
+  font-size: var(--sb-type-label);
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+#sb-detail-page .sb-config-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sb-space-32) var(--sb-grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#sb-detail-page .sb-config-tile { display: grid; gap: var(--sb-space-12); color: inherit; text-decoration: none; }
+#sb-detail-page .sb-config-tile-visual {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: var(--sb-image-ground);
+  overflow: hidden;
+}
+#sb-detail-page .sb-config-tile-visual img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+#sb-detail-page .sb-config-tile:hover .sb-config-tile-visual img { transform: scale(1.03); }
+#sb-detail-page .sb-config-tile-copy { display: grid; gap: 2px; }
+#sb-detail-page .sb-config-tile-name { font-size: var(--sb-type-body); line-height: var(--sb-leading-data); font-weight: 700; color: var(--sb-ink); }
+#sb-detail-page .sb-config-tile-size {
+  font-family: "SB D-DIN", "SB Pretendard", Arial, sans-serif;
+  font-size: var(--sb-type-body);
+  line-height: var(--sb-leading-data);
+  color: var(--sb-text);
+}
+#sb-detail-page .sb-config-tile-type { margin-top: 4px; font-size: var(--sb-type-label); line-height: 1.5; color: var(--sb-muted); }
+/* The product this page sells: an ink frame on the render and a label in its corner. */
+#sb-detail-page .sb-config-tile-current .sb-config-tile-visual { box-shadow: inset 0 0 0 2px var(--sb-ink); }
+#sb-detail-page .sb-config-tile-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 6px 10px;
+  background: var(--sb-ink);
+  color: var(--sb-page);
+  font-size: var(--sb-type-label);
+  line-height: 1.4;
+}
+#sb-detail-page .sb-config-group-note { margin: var(--sb-space-16) 0 0; font-size: var(--sb-type-caption); line-height: 1.6; color: var(--sb-muted); }
+#sb-detail-page .sb-config-groups + .sb-configuration-matrix-note { margin-top: var(--sb-space-32); }
+@media (prefers-reduced-motion: reduce) {
+  #sb-detail-page .sb-config-tile-visual img { transition: none; }
+}
+@media (max-width: 767px) {
+  #sb-detail-page .sb-config-types { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-space-24) var(--sb-space-16); margin-top: var(--sb-space-32); }
+  #sb-detail-page .sb-config-unit { margin-top: var(--sb-space-48); }
+  #sb-detail-page .sb-config-groups { gap: var(--sb-space-32); }
+  #sb-detail-page .sb-config-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-space-24) var(--sb-space-16); }
+  #sb-detail-page .sb-config-tile { gap: var(--sb-space-8); }
+  #sb-detail-page .sb-config-tile-badge { padding: 4px 8px; }
+}
+
+/* Exchange/returns and warranty stand as sections of their own; their intro copy sits beside the title. */
+#sb-detail-page .sb-section-heading > :is(.sb-policy-intro-copy, .sb-warranty-intro-copy) {
+  grid-column: auto;
+  grid-row: auto;
+  margin-top: 0;
+}
+/* Warranty and repair labels run longer than the fabric specs' (수리비(보증기간 내) is 94px), so on phones
+   their label column widens from 72px to keep each label on one line. */
+@media (max-width: 767px) {
+  #sb-detail-page :is(.sb-quality-warranty, .sb-service-support-copy) .sb-fabric-specs div {
+    grid-template-columns: 112px minmax(0, 1fr);
   }
 }
