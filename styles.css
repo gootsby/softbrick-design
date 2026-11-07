@@ -3312,7 +3312,9 @@
 #sb-detail-page .sb-service-request-heading>span,
 #sb-detail-page .sb-cutaway-label,
 #sb-detail-page .sb-cutaway-legend span,
-#sb-detail-page .sb-spec-box-heading>span {
+#sb-detail-page .sb-spec-box-heading>span,
+#sb-detail-page .sb-config-connect-copy>span,
+#sb-detail-page .sb-config-arm-copy>span {
   font-family: "SB D-DIN", "SB Pretendard", Arial, sans-serif;
   font-size: var(--sb-type-label);
   font-weight: 700;
@@ -4845,6 +4847,178 @@
 #sb-detail-page .sb-config-groups + .sb-configuration-matrix-note { margin-top: var(--sb-space-32); }
 @media (prefers-reduced-motion: reduce) {
   #sb-detail-page .sb-config-tile-visual img { transition: none; }
+}
+/* How the modules join: the copy runs across the top under an ink rule (title left, text right),
+   then the bracket photo and its line drawing stand side by side at the same 4:3 size. */
+#sb-detail-page .sb-config-connect {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--sb-space-32) var(--sb-grid-gap);
+  margin-top: var(--sb-space-64);
+}
+#sb-detail-page .sb-config-connect-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: auto 1fr;
+  row-gap: var(--sb-space-16);
+  align-items: start;
+  border-top: 1px solid var(--sb-ink);
+  padding-top: var(--sb-space-16);
+}
+#sb-detail-page .sb-config-connect-copy > span {
+  grid-column: 1 / span 6;
+  color: var(--sb-muted);
+}
+#sb-detail-page .sb-config-connect-copy h3 {
+  grid-column: 1 / span 6;
+  margin: 0;
+  font-size: var(--sb-type-heading);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+#sb-detail-page .sb-config-connect-copy p {
+  grid-column: 7 / span 6;
+  grid-row: 1 / span 2;
+  margin: 0;
+  color: var(--sb-text);
+}
+#sb-detail-page .sb-config-connect-visual,
+#sb-detail-page .sb-config-connect-drawing { margin: 0; }
+#sb-detail-page .sb-config-connect-visual {
+  grid-column: 1 / span 6;
+  aspect-ratio: 4 / 3;
+  background: var(--sb-image-ground);
+  overflow: hidden;
+}
+#sb-detail-page .sb-config-connect-visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
+#sb-detail-page .sb-config-connect-drawing {
+  grid-column: 7 / span 6;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--sb-space-12);
+}
+/* The drawing frame is as tall as the photo minus the legend, so the legend's last line meets the photo's bottom edge. */
+#sb-detail-page .sb-config-connect-drawing-frame {
+  position: relative;
+  min-height: 0;
+  border: 1px solid var(--sb-line);
+}
+#sb-detail-page .sb-config-connect-drawing-frame img {
+  position: absolute;
+  inset: 6% 3%;
+  width: 94%;
+  height: 88%;
+  object-fit: contain;
+}
+#sb-detail-page .sb-config-connect-drawing figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sb-space-8) var(--sb-space-24);
+  font-size: var(--sb-type-caption);
+  line-height: 1.6;
+  color: var(--sb-muted);
+}
+#sb-detail-page .sb-config-connect-drawing figcaption b {
+  margin-right: var(--sb-space-8);
+  font-family: "SB D-DIN", "SB Pretendard", Arial, sans-serif;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+#sb-detail-page .sb-config-connect-drawing figcaption > span:last-child { margin-left: auto; }
+
+/* Armrest direction: same copy row as the bracket block, then on PC and tablet one photo of both
+   directions with a label under each half. Phones swap that photo for one crop per direction, stacked. */
+#sb-detail-page .sb-config-arm {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--sb-space-32) var(--sb-grid-gap);
+  margin-top: var(--sb-space-64);
+}
+#sb-detail-page .sb-config-arm-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: auto 1fr;
+  row-gap: var(--sb-space-16);
+  align-items: start;
+  border-top: 1px solid var(--sb-ink);
+  padding-top: var(--sb-space-16);
+}
+#sb-detail-page .sb-config-arm-copy > span {
+  grid-column: 1 / span 6;
+  color: var(--sb-muted);
+}
+#sb-detail-page .sb-config-arm-copy h3 {
+  grid-column: 1 / span 6;
+  margin: 0;
+  font-size: var(--sb-type-heading);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+#sb-detail-page .sb-config-arm-copy p {
+  grid-column: 7 / span 6;
+  grid-row: 1 / span 2;
+  margin: 0;
+  color: var(--sb-text);
+}
+#sb-detail-page .sb-config-arm-both {
+  grid-column: 1 / -1;
+  aspect-ratio: 2 / 1;
+  background: var(--sb-image-ground);
+  overflow: hidden;
+}
+#sb-detail-page :is(.sb-config-arm-both, .sb-config-arm-single) img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 66%;
+}
+#sb-detail-page .sb-config-arm-list {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  margin: calc(var(--sb-space-16) - var(--sb-space-32)) 0 0;
+  padding: 0;
+  list-style: none;
+}
+#sb-detail-page .sb-config-arm-list > li {
+  grid-column: span 6;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+}
+#sb-detail-page .sb-config-arm-list strong { font-size: var(--sb-type-body); line-height: var(--sb-leading-data); font-weight: 700; color: var(--sb-ink); }
+#sb-detail-page .sb-config-arm-list > li > span { font-size: var(--sb-type-label); line-height: 1.5; color: var(--sb-muted); }
+#sb-detail-page .sb-config-arm-single { display: none; }
+@media (max-width: 767px) {
+  #sb-detail-page .sb-config-arm { grid-template-columns: 1fr; row-gap: var(--sb-space-24); margin-top: var(--sb-space-48); }
+  #sb-detail-page .sb-config-arm-copy { grid-column: 1; grid-template-columns: 1fr; }
+  #sb-detail-page :is(.sb-config-arm-copy > span, .sb-config-arm-copy h3, .sb-config-arm-copy p) { grid-column: 1; grid-row: auto; }
+  #sb-detail-page .sb-config-arm-both { display: none; }
+  #sb-detail-page .sb-config-arm-list { grid-column: 1; grid-template-columns: 1fr; row-gap: var(--sb-space-32); margin-top: 0; }
+  #sb-detail-page .sb-config-arm-list > li { grid-column: 1; justify-items: start; text-align: left; }
+  #sb-detail-page .sb-config-arm-single {
+    display: block;
+    width: 100%;
+    margin-bottom: var(--sb-space-12);
+    aspect-ratio: 3 / 2;
+    background: var(--sb-image-ground);
+    overflow: hidden;
+  }
+}
+@media (max-width: 767px) {
+  #sb-detail-page .sb-config-connect { grid-template-columns: 1fr; row-gap: var(--sb-space-24); margin-top: var(--sb-space-48); }
+  #sb-detail-page .sb-config-connect-copy { grid-column: 1; grid-template-columns: 1fr; }
+  #sb-detail-page :is(.sb-config-connect-copy > span, .sb-config-connect-copy h3, .sb-config-connect-copy p) { grid-column: 1; grid-row: auto; }
+  #sb-detail-page .sb-config-connect-visual,
+  #sb-detail-page .sb-config-connect-drawing { grid-column: 1; }
+  #sb-detail-page .sb-config-connect-drawing-frame { aspect-ratio: 16 / 9; }
+  #sb-detail-page .sb-config-connect-drawing figcaption > span:last-child { margin-left: 0; flex-basis: 100%; }
 }
 @media (max-width: 767px) {
   #sb-detail-page .sb-config-types { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-space-24) var(--sb-space-16); margin-top: var(--sb-space-32); }
