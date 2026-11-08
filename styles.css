@@ -554,6 +554,15 @@
   grid-column: 1 / span 6;
 }
 
+/* 세로 한 장 옆에 가로 두 장: 두 장이 높이를 반씩 나눠 세로 사진 아래 끝에 맞춤 */
+#sb-detail-page .sb-gallery-group-stack {
+  grid-template-rows: 1fr 1fr;
+}
+
+#sb-detail-page .sb-gallery-group-stack > .sb-gallery-band:nth-child(2) {
+  grid-row: 1;
+}
+
 /* 원단 띠: 옆 세로 사진 아래 끝에 맞춰 남은 높이를 채움 */
 #sb-detail-page .sb-gallery-band {
   display: flex;
@@ -570,6 +579,19 @@
 #sb-detail-page .sb-gallery-band .sb-gallery-tile img {
   position: absolute;
   inset: 0;
+}
+
+/* 소재 묶음(가죽 등): 위에 구분선과 라벨을 두고 안의 묶음을 같은 간격으로 쌓음 */
+#sb-detail-page .sb-gallery-chapter {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: inherit;
+  margin-top: var(--sb-space-48);
+}
+
+#sb-detail-page .sb-gallery-chapter-head {
+  grid-column: 1 / -1;
 }
 
 /* 네 장 묶음: 왼쪽 열 세로→가로, 오른쪽 열 가로→세로 */
@@ -2664,7 +2686,8 @@
     display: contents;
   }
 
-  #sb-detail-page .sb-gallery-group > .sb-gallery-figure {
+  #sb-detail-page .sb-gallery-group > .sb-gallery-figure,
+  #sb-detail-page .sb-gallery-group-stack > .sb-gallery-band:nth-child(2) {
     grid-column: 1;
     grid-row: auto;
   }
