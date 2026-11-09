@@ -5066,3 +5066,25 @@ body:has(#sb-detail-page) {
     grid-template-columns: 112px minmax(0, 1fr);
   }
 }
+
+/* Keep the sticky detail index pinned through the common footer. A sticky box only travels inside its
+   parent, and the index lives in the product body, which ends where Imweb's shared footer begins. Both sit
+   side by side in Imweb's #prod_detail_body (and in <body> on the local preview), so the body's own box is
+   dissolved: the index then travels inside #prod_detail_body and stays put over the footer sections too.
+   The body's top and bottom padding move to empty ::before/::after blocks, since a display: contents box
+   draws no padding; the page background behind it is already white. */
+#sb-detail-page.sb-detail-page {
+  display: contents;
+}
+#sb-detail-page.sb-detail-page::before,
+#sb-detail-page.sb-detail-page::after {
+  content: "";
+  display: block;
+  height: var(--sb-space-80);
+}
+@media (max-width: 767px) {
+  #sb-detail-page.sb-detail-page::before,
+  #sb-detail-page.sb-detail-page::after {
+    height: var(--sb-space-48);
+  }
+}
