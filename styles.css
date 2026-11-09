@@ -1085,8 +1085,8 @@ body:has(#sb-detail-page) {
   visibility: hidden;
 }
 
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-fusion:checked~.sb-fabric-collections #sb-fusion-panel,
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-randers:checked~.sb-fabric-collections #sb-randers-panel {
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-melange:checked~.sb-fabric-collections #sb-melange-panel,
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-weave:checked~.sb-fabric-collections #sb-weave-panel {
   position: static;
   height: auto;
   overflow: visible;
@@ -1186,14 +1186,14 @@ body:has(#sb-detail-page) {
   color: var(--sb-ink);
 }
 
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-fusion:checked~.sb-fabric-tabs label[for="sb-fabric-tab-fusion"],
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-randers:checked~.sb-fabric-tabs label[for="sb-fabric-tab-randers"] {
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-melange:checked~.sb-fabric-tabs label[for="sb-fabric-tab-melange"],
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-weave:checked~.sb-fabric-tabs label[for="sb-fabric-tab-weave"] {
   border-bottom-color: var(--sb-ink);
   color: var(--sb-ink);
 }
 
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-fusion:focus-visible~.sb-fabric-tabs label[for="sb-fabric-tab-fusion"],
-:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-randers:focus-visible~.sb-fabric-tabs label[for="sb-fabric-tab-randers"] {
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-melange:focus-visible~.sb-fabric-tabs label[for="sb-fabric-tab-melange"],
+:is(#sb-detail-page, #sb-detail-footer) #sb-fabric-tab-weave:focus-visible~.sb-fabric-tabs label[for="sb-fabric-tab-weave"] {
   background: var(--sb-image-ground);
 }
 
@@ -1350,8 +1350,10 @@ body:has(#sb-detail-page) {
 
 :is(#sb-detail-page, #sb-detail-footer) .sb-size-specs div {
   display: grid;
-  /* Keep every measurement on one shared value column, regardless of label length. */
-  grid-template-columns: 172px minmax(0, 1fr);
+  /* Keep every measurement on one shared value column, regardless of label length.
+     The label column only needs the longest label ("좌석 높이"), leaving room for
+     values like "배치 1 · 2750 (880+820+1050)" on one line. */
+  grid-template-columns: 120px minmax(0, 1fr);
   align-items: center;
   gap: var(--sb-space-24);
   border-bottom: 1px solid var(--sb-line);
@@ -2855,7 +2857,7 @@ body:has(#sb-detail-page) {
   }
 
   :is(#sb-detail-page, #sb-detail-footer) .sb-size-specs div {
-    grid-template-columns: 140px minmax(0, 1fr);
+    grid-template-columns: 80px minmax(0, 1fr);
     gap: var(--sb-space-16);
   }
 
@@ -4492,6 +4494,24 @@ body:has(#sb-detail-page) {
   height: auto;
   max-height: 100%;
 }
+/* Configurations with more than one layout stack a titled drawing per layout, so the box sizes to them.
+   The stool drawing (shared by every configuration) is short and wide, so it sizes to its drawing too. */
+:is(#sb-detail-page, #sb-detail-footer) :is(.sb-size-visual-multi, .sb-size-visual-stool) {
+  min-height: 0;
+  aspect-ratio: auto;
+  justify-content: start;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-title {
+  margin: 0;
+  color: var(--sb-ink);
+  font-size: var(--sb-type-caption);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing + .sb-size-drawing-title {
+  margin-top: var(--sb-space-24);
+}
 :is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-caption {
   margin: 0;
   color: var(--sb-muted);
@@ -4764,11 +4784,12 @@ body:has(#sb-detail-page) {
   font-weight: 700;
   color: var(--sb-ink);
 }
+/* Rows read number → item (bold) → status (muted, before the plus), so repeated statuses read as tags. */
 :is(#sb-detail-page, #sb-detail-footer) .sb-fold-result {
   grid-column: 3;
   font-size: var(--sb-type-body);
   line-height: var(--sb-leading-data);
-  color: var(--sb-text);
+  color: var(--sb-muted);
 }
 :is(#sb-detail-page, #sb-detail-footer) .sb-fold-body {
   display: grid;
@@ -5072,9 +5093,13 @@ body:has(#sb-detail-page) {
    side by side in Imweb's #prod_detail_body (and in <body> on the local preview), so the body's own box is
    dissolved: the index then travels inside #prod_detail_body and stays put over the footer sections too.
    The body's top and bottom padding move to empty ::before/::after blocks, since a display: contents box
-   draws no padding; the page background behind it is already white. */
+   draws no padding. It draws no background either, so its white moves to the parent (#prod_detail_body
+   in Imweb, <body> in the local preview); otherwise whatever sits behind shows through. */
 #sb-detail-page.sb-detail-page {
   display: contents;
+}
+:has(> #sb-detail-page.sb-detail-page) {
+  background-color: #ffffff;
 }
 #sb-detail-page.sb-detail-page::before,
 #sb-detail-page.sb-detail-page::after {
