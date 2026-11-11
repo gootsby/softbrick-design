@@ -3340,6 +3340,7 @@ body:has(#sb-detail-page) {
 :is(#sb-detail-page, #sb-detail-footer) .sb-cutaway-legend span,
 :is(#sb-detail-page, #sb-detail-footer) .sb-spec-box-heading>span,
 :is(#sb-detail-page, #sb-detail-footer) .sb-config-connect-copy>span,
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy>span,
 :is(#sb-detail-page, #sb-detail-footer) .sb-config-arm-copy>span {
   font-family: "SB D-DIN", "SB Pretendard", Arial, sans-serif;
   font-size: var(--sb-type-label);
@@ -4972,6 +4973,100 @@ body:has(#sb-detail-page) {
   color: var(--sb-ink);
 }
 :is(#sb-detail-page, #sb-detail-footer) .sb-config-connect-drawing figcaption > span:last-child { margin-left: auto; }
+
+/* Module planner: the same copy row as the bracket block (title left, text right under an ink rule),
+   then what the web planner does as three ruled items, and an ink button that opens it in a new tab. */
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--sb-space-32) var(--sb-grid-gap);
+  margin-top: var(--sb-space-64);
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: auto 1fr;
+  row-gap: var(--sb-space-16);
+  align-items: start;
+  border-top: 1px solid var(--sb-ink);
+  padding-top: var(--sb-space-16);
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy > span { grid-column: 1 / span 6; color: var(--sb-muted); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy h3 {
+  grid-column: 1 / span 6;
+  margin: 0;
+  font-size: var(--sb-type-heading);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy p {
+  grid-column: 7 / span 6;
+  grid-row: 1 / span 2;
+  margin: 0;
+  color: var(--sb-text);
+}
+/* The PC + phone mockup runs the full width so the app UI stays legible; the list and button follow in the copy's right column.
+   The mockup is drawn on the image-ground grey, so it needs no frame. */
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-visual {
+  grid-column: 1 / -1;
+  margin: 0;
+  background: var(--sb-image-ground);
+  overflow: hidden;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-visual img { display: block; width: 100%; height: auto; }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list {
+  grid-column: 7 / span 6;
+  align-self: start;
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list > li {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--sb-space-16);
+  border-top: 1px solid var(--sb-line);
+  padding: var(--sb-space-12) 0;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list > li:last-child { border-bottom: 1px solid var(--sb-line); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list strong { font-size: var(--sb-type-body); line-height: var(--sb-leading-data); font-weight: 700; color: var(--sb-ink); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list span { font-size: var(--sb-type-body); line-height: var(--sb-leading-data); color: var(--sb-text); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link {
+  grid-column: 7 / span 6;
+  justify-self: start;
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sb-space-12);
+  padding: 14px 24px;
+  background: var(--sb-ink);
+  color: var(--sb-page);
+  font-size: var(--sb-type-body);
+  line-height: 1.4;
+  font-weight: 700;
+  text-decoration: none;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link > span { transition: transform 200ms ease; }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link:hover > span { transform: translateX(4px); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link:focus-visible { outline: 2px solid var(--sb-ink); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link > span { transition: none; }
+}
+@media (max-width: 767px) {
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner { grid-template-columns: 1fr; row-gap: var(--sb-space-24); margin-top: var(--sb-space-48); }
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-copy { grid-column: 1; grid-template-columns: 1fr; }
+  :is(#sb-detail-page, #sb-detail-footer) :is(.sb-config-planner-copy > span, .sb-config-planner-copy h3, .sb-config-planner-copy p) { grid-column: 1; grid-row: auto; }
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-visual,
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list,
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link { grid-column: 1; }
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list > li { grid-template-columns: 96px minmax(0, 1fr); gap: var(--sb-space-12); }
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-list span { font-size: var(--sb-type-label); line-height: 1.5; }
+  :is(#sb-detail-page, #sb-detail-footer) .sb-config-planner-link { justify-self: stretch; justify-content: center; }
+}
 
 /* Armrest direction: same copy row as the bracket block, then on PC and tablet one photo of both
    directions with a label under each half. Phones swap that photo for one crop per direction, stacked. */
