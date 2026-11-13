@@ -4513,6 +4513,30 @@ body:has(#sb-detail-page) {
 :is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing + .sb-size-drawing-title {
   margin-top: var(--sb-space-24);
 }
+/* Module page: each drawing title links to that module's own product page, on the line below the name. */
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-title-linked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--sb-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
+}
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-link > span { text-decoration: none; transition: transform 200ms ease; }
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-link:hover > span { transform: translateX(3px); }
+:is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-link:focus-visible { outline: 2px solid var(--sb-ink); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  :is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-link > span { transition: none; }
+}
 :is(#sb-detail-page, #sb-detail-footer) .sb-size-drawing-caption {
   margin: 0;
   color: var(--sb-muted);
